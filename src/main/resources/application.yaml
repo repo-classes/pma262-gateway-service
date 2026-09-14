@@ -4,15 +4,21 @@ spring:
 
   cloud:
     gateway:
+
+      default-filters:
+        - RemoveRequestHeader=id-account
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+
       server:
         webflux:
 
           globalcors:
             corsConfigurations:
               '[/**]':
-                allowedOrigins: ${CORS_ALLOWED_ORIGINS:*}
+                allowedOrigins: ${CORS_ALLOWED_ORIGINS:http://localhost,http://localhost:3000,http://localhost:8080}
                 allowedHeaders: "*"
-                allowedMethods: "*"        
+                allowedMethods: "*"
+                allowCredentials: true
 
           routes:
 
