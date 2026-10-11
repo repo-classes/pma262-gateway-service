@@ -11,7 +11,11 @@ public class GatewayResource {
 
     @GetMapping("/health-check")
     public ResponseEntity<Map<String, String>> healthCheck() {
-        return ResponseEntity.ok(System.getenv());
+        // only the container's hostname, to tell which replica answered:
+        // System.getenv() would publish every secret on an open endpoint
+        return ResponseEntity.ok(Map.of(
+            "hostname", System.getenv().getOrDefault("HOSTNAME", "unknown")
+        ));
     }
     
 }

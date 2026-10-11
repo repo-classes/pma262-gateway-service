@@ -5,12 +5,15 @@ spring:
   cloud:
     gateway:
 
-      default-filters:
-        - RemoveRequestHeader=id-account
-        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-
       server:
         webflux:
+
+          # Spring Cloud Gateway 5 (Spring Cloud 2025.x) binds its properties
+          # under spring.cloud.gateway.server.webflux: at the old place these
+          # filters were ignored, and a client could send its own id-account
+          default-filters:
+            - RemoveRequestHeader=id-account
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
 
           globalcors:
             corsConfigurations:
