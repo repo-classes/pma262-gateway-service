@@ -9,6 +9,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
@@ -69,6 +70,10 @@ public class AuthorizationFilter implements GlobalFilter {
             .uri(AUTH_SERVICE_TOKEN_SOLVE)
             .bodyValue(Map.of("token", jwt))
             .retrieve()
+            // auth rejected the token (expired, tampered...): 401, not a 500
+            .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(
+                new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token")
+            ))
             .toEntity(Map.class)
             .flatMap(response -> {
                 if (response != null && response.hasBody() && response.getBody() != null) {
