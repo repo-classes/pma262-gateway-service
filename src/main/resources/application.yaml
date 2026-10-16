@@ -5,6 +5,9 @@ spring:
   cloud:
     gateway:
 
+      metrics:
+        enabled: true
+
       default-filters:
         - RemoveRequestHeader=id-account
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
@@ -36,6 +39,13 @@ spring:
               uri: http://auth:8080
               predicates:
                 - Path=/auth/**
+
+management:
+  endpoints:
+    web:
+      base-path: /gateway/actuator
+      exposure:
+        include: ['prometheus']
 
 logging:
   level:
