@@ -12,7 +12,8 @@ public class RouterValidator {
     private List<String> openApiEndpoints = List.of(
             "POST /auth/register",
             "GET /auth/logout",
-            "POST /auth/login");
+            "POST /auth/login"
+        );
 
     public Predicate<ServerHttpRequest> isSecured = request -> openApiEndpoints
             .stream()
